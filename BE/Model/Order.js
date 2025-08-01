@@ -1,0 +1,33 @@
+const mongoose = require("mongoose");
+const Product = require("./Product");
+const User = require("./User");
+const Schema = mongoose.Schema;
+
+const orderSchema = new Schema(
+  {
+    shipTo: { type: String, required: true },
+    contact: { type: Number, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    items: [
+      {
+        productId: { type: Schema.Types.ObjectId, ref: "Product" },
+        qty: { type: Number, required: true },
+        size: { type: String, required: true },
+        price: { type: String, required: true },
+      },
+    ],
+  },
+  { timestamps: true }
+);
+
+orderSchema.methods.toJSON = function () {
+  const obj = this._doc;
+  delete obj.__v;
+  delete obj.updatedAt;
+  delete obj.createdAt;
+  return obj;
+};
+
+const Order = mongoose.model("Order", orderSchema);
+
+module.exports = Order;

@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+.env
+dist/
+build/
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional OS-specific
+.DS_Store         # macOS
+Thumbs.db         # Windows
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
