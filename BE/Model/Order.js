@@ -5,6 +5,8 @@ const Schema = mongoose.Schema;
 
 const orderSchema = new Schema(
   {
+    status: { type: String, default: "preparing" },
+    totalPrice: { type: Number, requried: true, default: 0 },
     shipTo: { type: String, required: true },
     contact: { type: Number, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User" },
