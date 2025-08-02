@@ -40,6 +40,7 @@ export const registerUser = createAsyncThunk(
           status: "error",
         })
       );
+      console.log("error", error.message);
       return rejectWithValue(error.response.data.message);
     }
   }
