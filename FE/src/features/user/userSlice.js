@@ -6,7 +6,14 @@ import { initialCart } from "../cart/cartSlice";
 
 export const loginWithEmail = createAsyncThunk(
   "user/loginWithEmail",
-  async ({ email, password }, { rejectWithValue }) => {}
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      const response = await api.post("/auth/login", { email, password });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 export const loginWithGoogle = createAsyncThunk(
@@ -31,7 +38,7 @@ export const registerUser = createAsyncThunk(
           })
         );
         navigate("/login");
-        return response.data.data;
+        return response.data;
       }
     } catch (error) {
       dispatch(
@@ -40,8 +47,7 @@ export const registerUser = createAsyncThunk(
           status: "error",
         })
       );
-      console.log("error", error.message);
-      return rejectWithValue(error.response.data.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -77,6 +83,18 @@ const userSlice = createSlice({
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.registrationError = action.payload;
+      })
+      .addCase(loginWithEmail.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(loginWithEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.loginError = null;
+        state.user = action.payload.user;
+      })
+      .addCase(loginWithEmail.rejected, (state, action) => {
+        state.loginError = action.payload;
+        console.log("action.payload", action.payload);
       });
   },
 });
