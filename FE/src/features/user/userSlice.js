@@ -27,12 +27,6 @@ export const logout = createAsyncThunk(
   async (_, { dispatch }) => {
     sessionStorage.removeItem("token");
     dispatch(initialCart()); // clear cart if needed
-    dispatch(
-      showToastMessage({
-        message: "Logged out",
-        status: "success",
-      })
-    );
     return;
   }
 );
