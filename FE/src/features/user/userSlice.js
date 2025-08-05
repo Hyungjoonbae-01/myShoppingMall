@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { showToastMessage } from "../common/uiSlice";
+import { showToastMessage, hideToastMessage } from "../common/uiSlice";
 import api from "../../utils/api";
 import { initialCart } from "../cart/cartSlice";
 
@@ -22,7 +22,21 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = createAsyncThunk(
+  "user/logout",
+  async (_, { dispatch }) => {
+    sessionStorage.removeItem("token");
+    dispatch(initialCart()); // clear cart if needed
+    dispatch(
+      showToastMessage({
+        message: "Logged out",
+        status: "success",
+      })
+    );
+    return;
+  }
+);
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
@@ -107,6 +121,14 @@ const userSlice = createSlice({
 
       .addCase(loginWithToken.fulfilled, (state, action) => {
         state.user = action.payload.user;
+      })
+
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.loginError = null;
+        state.registrationError = null;
+        state.success = false;
+        state.loading = false;
       });
   },
 });
