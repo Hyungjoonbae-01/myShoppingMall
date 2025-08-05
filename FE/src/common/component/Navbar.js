@@ -85,9 +85,27 @@ const Navbar = ({ user }) => {
 
         <div>
           <div className="display-flex">
+            {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
+              <div className="nav-icon search-box landing-search-box ">
+                <FontAwesomeIcon icon={faSearch} />
+                <input
+                  type="text"
+                  placeholder="제품검색"
+                  onKeyPress={onCheckEnter}
+                />
+              </div>
+            )}
             {user ? (
               <div onClick={handleLogout} className="nav-icon">
-                <FontAwesomeIcon icon={faUser} />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                >
+                  <path d="M15.727 10.787c.513-.7.82-1.548.82-2.464C16.546 5.94 14.506 4 12 4S7.454 5.94 7.454 8.323c0 .916.306 1.763.82 2.464L5 12.983V20h14v-7.017zM12 5.178c1.824 0 3.306 1.412 3.306 3.145S13.823 11.468 12 11.468s-3.306-1.411-3.306-3.145S10.177 5.178 12 5.178m5.76 13.644H6.24v-5.227l2.894-1.942a4.64 4.64 0 0 0 2.865.994 4.65 4.65 0 0 0 2.865-.994l2.895 1.941z" />
+                </svg>
                 {!isMobile && (
                   <span style={{ cursor: "pointer" }}>로그아웃</span>
                 )}
@@ -99,9 +117,23 @@ const Navbar = ({ user }) => {
               </div>
             )}
             <div onClick={() => navigate("/cart")} className="nav-icon">
-              <FontAwesomeIcon icon={faShoppingBag} />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="currentColor"
+              >
+                <path
+                  fill="currentColor"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
+                  d="m7.044 6.566-.004-3.06H2.008v1.199h3.834l.014 10.754h12.897l2.24-8.894zm10.774 7.694H7.055l-.008-6.495h12.407zm-.85 6.242a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3m-8.015-1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"
+                />
+              </svg>
+
               {!isMobile && (
-                <span style={{ cursor: "pointer" }}>{`쇼핑백(${
+                <span style={{ cursor: "pointer" }}>{`쇼핑카트(${
                   cartItemCount || 0
                 })`}</span>
               )}
@@ -113,6 +145,7 @@ const Navbar = ({ user }) => {
               <FontAwesomeIcon icon={faBox} />
               {!isMobile && <span style={{ cursor: "pointer" }}>내 주문</span>}
             </div>
+
             {isMobile && (
               <div className="nav-icon" onClick={() => setShowSearchBox(true)}>
                 <FontAwesomeIcon icon={faSearch} />
@@ -124,7 +157,7 @@ const Navbar = ({ user }) => {
 
       <div className="nav-logo">
         <Link to="/">
-          <img width={100} src="/image/hm-logo.png" alt="hm-logo.png" />
+          <img width={150} src="/JJOA.png" alt="hm-logo.png" />
         </Link>
       </div>
       <div className="nav-menu-area">
@@ -135,16 +168,6 @@ const Navbar = ({ user }) => {
             </li>
           ))}
         </ul>
-        {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
-          <div className="search-box landing-search-box ">
-            <FontAwesomeIcon icon={faSearch} />
-            <input
-              type="text"
-              placeholder="제품검색"
-              onKeyPress={onCheckEnter}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
