@@ -32,8 +32,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
 
-  console.log("stock", stock);
-
   useEffect(() => {
     if (success) setShowDialog(false);
   }, [success]);
@@ -61,6 +59,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const handleClose = () => {
     //모든걸 초기화시키고;
     // 다이얼로그 닫아주기
+    setFormData({ ...InitialFormData });
+    setStock([]);
+    setStockError(false);
+    dispatch(clearError());
+    setShowDialog(false);
   };
 
   const handleSubmit = (event) => {
@@ -76,6 +79,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     // [['M',2]] 에서 {M:2}로
     if (mode === "new") {
       //새 상품 만들기
+      dispatch(createProduct({ ...formData, stock: totalStock }));
     } else {
       // 상품 수정하기
     }
