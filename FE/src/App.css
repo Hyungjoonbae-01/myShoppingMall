@@ -30,7 +30,6 @@ body {
 .nav-logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
 }
 .nav-menu-area {
   display: flex;

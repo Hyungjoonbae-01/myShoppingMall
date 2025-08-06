@@ -272,6 +272,7 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
               onChange={handleChange}
               type="number"
               placeholder="0"
+              min="1"
             />
           </Form.Group>
 
