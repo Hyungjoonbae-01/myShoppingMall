@@ -61,7 +61,7 @@ export const deleteProduct = createAsyncThunk(
       if (response.status !== 200) throw new Error(response.nessgae);
       dispatch(
         showToastMessage({
-          message: "product successfully created",
+          message: "product successfully deleted",
           status: "success",
         })
       );
@@ -80,7 +80,7 @@ export const editProduct = createAsyncThunk(
       if (response.status !== 200) throw new Error(response.message);
       dispatch(
         showToastMessage({
-          message: "product successfully created",
+          message: "product successfully updated",
           status: "success",
         })
       );
