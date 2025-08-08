@@ -21,7 +21,16 @@ export const getProductList = createAsyncThunk(
 
 export const getProductDetail = createAsyncThunk(
   "products/getProductDetail",
-  async (id, { rejectWithValue }) => {}
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await api.get(`/product/${id}`);
+      if (res.status !== 200)
+        throw new Error(res.data?.message || "Failed to fetch");
+      return res.data.data; // a single product object
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
 );
 
 export const createProduct = createAsyncThunk(
@@ -36,6 +45,7 @@ export const createProduct = createAsyncThunk(
           status: "success",
         })
       );
+      dispatch(getProductList({ page: 1 }));
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -45,12 +55,42 @@ export const createProduct = createAsyncThunk(
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
-  async (id, { dispatch, rejectWithValue }) => {}
+  async (id, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/product/${id}`);
+      if (response.status !== 200) throw new Error(response.nessgae);
+      dispatch(
+        showToastMessage({
+          message: "product successfully created",
+          status: "success",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {}
+  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.put(`/product/${id}`, formData);
+      if (response.status !== 200) throw new Error(response.message);
+      dispatch(
+        showToastMessage({
+          message: "product successfully created",
+          status: "success",
+        })
+      );
+      dispatch(getProductList({ page: 1 }));
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 // 슬라이스 생성
@@ -65,6 +105,9 @@ const productSlice = createSlice({
     success: false,
   },
   reducers: {
+    startLoading: (state) => {
+      state.loading = true;
+    },
     setSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload;
     },
@@ -91,7 +134,7 @@ const productSlice = createSlice({
       state.success = false;
     });
     builder.addCase(getProductList.pending, (state) => {
-      state.loading = false;
+      state.loading = true;
     });
     builder.addCase(getProductList.fulfilled, (state, action) => {
       state.loading = false;
@@ -103,9 +146,50 @@ const productSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    builder.addCase(editProduct.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(editProduct.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      state.success = true;
+    });
+    builder.addCase(editProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.success = false;
+    });
+    builder.addCase(deleteProduct.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = "";
+      state.success = true;
+    });
+    builder.addCase(deleteProduct.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.success = false;
+    });
+    builder.addCase(getProductDetail.pending, (state) => {
+      state.loading = true;
+      state.error = "";
+      state.selectedProduct = null; // optional: clear stale data
+    });
+    builder.addCase(getProductDetail.fulfilled, (state, action) => {
+      state.loading = false;
+      state.selectedProduct = action.payload;
+      state.error = "";
+    });
+    builder.addCase(getProductDetail.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+      state.selectedProduct = null;
+    });
   },
 });
 
-export const { setSelectedProduct, setFilteredList, clearError } =
+export const { startLoading, setSelectedProduct, setFilteredList, clearError } =
   productSlice.actions;
 export default productSlice.reducer;
