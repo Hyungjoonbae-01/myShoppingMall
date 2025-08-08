@@ -34,10 +34,6 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stockError, setStockError] = useState(false);
 
   useEffect(() => {
-    if (success) setShowDialog(false);
-  }, [success]);
-
-  useEffect(() => {
     if (error || !success) {
       dispatch(clearError());
     }
@@ -87,6 +83,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
         editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
       );
     }
+    setShowDialog(false);
+    setFormData({ ...InitialFormData });
+    setStock([]);
+    setStockError(false);
+    dispatch(clearError());
   };
 
   const handleChange = (event) => {
