@@ -45,7 +45,7 @@ export const createProduct = createAsyncThunk(
           status: "success",
         })
       );
-      dispatch(getProductList({ page: 1 }));
+      await dispatch(getProductList());
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -65,7 +65,6 @@ export const deleteProduct = createAsyncThunk(
           status: "success",
         })
       );
-      dispatch(getProductList({ page: 1 }));
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
