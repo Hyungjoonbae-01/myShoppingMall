@@ -22,7 +22,7 @@ const InitialFormData = {
   price: 0,
 };
 
-const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
+const NewItemDialog = ({ mode, showDialog, setShowDialog, currentQuery }) => {
   const { error, success, selectedProduct } = useSelector(
     (state) => state.product
   );
@@ -34,7 +34,11 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const [stockError, setStockError] = useState(false);
 
   useEffect(() => {
-    if (error || !success) {
+    if (success) setShowDialog(false);
+  }, [success]);
+
+  useEffect(() => {
+    if (error || success) {
       dispatch(clearError());
     }
     if (showDialog) {
@@ -76,18 +80,18 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
     // [['M',2]] 에서 {M:2}로
     if (mode === "new") {
       //새 상품 만들기
-      dispatch(createProduct({ ...formData, stock: totalStock }));
+      dispatch(
+        createProduct({
+          formData: { ...formData, stock: totalStock },
+          currentQuery,
+        })
+      );
     } else {
       // 상품 수정하기
       dispatch(
         editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
       );
     }
-    setShowDialog(false);
-    setFormData({ ...InitialFormData });
-    setStock([]);
-    setStockError(false);
-    dispatch(clearError());
   };
 
   const handleChange = (event) => {

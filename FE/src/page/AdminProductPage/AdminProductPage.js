@@ -135,6 +135,7 @@ const AdminProductPage = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
+        currentQuery={searchQuery}
       />
     </div>
   );

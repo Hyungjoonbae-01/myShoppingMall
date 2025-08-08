@@ -9,6 +9,7 @@ export const getProductList = createAsyncThunk(
     try {
       const response = await api.get("/product", { params: { ...query } });
       console.log("rrr", response);
+      console.log("query", query);
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -35,17 +36,19 @@ export const getProductDetail = createAsyncThunk(
 
 export const createProduct = createAsyncThunk(
   "products/createProduct",
-  async (formData, { dispatch, rejectWithValue }) => {
+  async ({ formData, currentQuery }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/product", formData);
       if (response.status !== 200) throw new Error(response.error);
+      // await dispatch(getProductList());
       dispatch(
         showToastMessage({
           message: "product successfully created",
           status: "success",
         })
       );
-      await dispatch(getProductList());
+      console.log("query", currentQuery);
+      await dispatch(getProductList(currentQuery));
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);
