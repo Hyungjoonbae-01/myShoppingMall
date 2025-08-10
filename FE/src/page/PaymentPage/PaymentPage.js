@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import OrderReceipt from "./component/OrderReceipt";
 import PaymentForm from "./component/PaymentForm";
@@ -11,6 +11,7 @@ import { createOrder } from "../../features/order/orderSlice";
 const PaymentPage = () => {
   const dispatch = useDispatch();
   const { orderNum } = useSelector((state) => state.order);
+  const { cartList, totalPrice } = useSelector((s) => s.cart);
   const [cardValue, setCardValue] = useState({
     cvc: "",
     expiry: "",
@@ -122,10 +123,15 @@ const PaymentPage = () => {
                   </Form.Group>
                 </Row>
                 <div className="mobile-receipt-area">
-                  {/* <OrderReceipt /> */}
+                  <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
                 </div>
                 <div>
                   <h2 className="payment-title">결제 정보</h2>
+                  <PaymentForm
+                    cardValue={cardValue}
+                    handlePaymentInfoChange={handlePaymentInfoChange}
+                    handleInputFocus={handleInputFocus}
+                  />
                 </div>
 
                 <Button
@@ -140,7 +146,7 @@ const PaymentPage = () => {
           </div>
         </Col>
         <Col lg={5} className="receipt-area">
-          {/* <OrderReceipt  /> */}
+          <OrderReceipt cartList={cartList} totalPrice={totalPrice} />
         </Col>
       </Row>
     </Container>

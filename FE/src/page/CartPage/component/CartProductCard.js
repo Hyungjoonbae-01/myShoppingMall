@@ -8,12 +8,12 @@ import { updateQty, deleteCartItem } from "../../../features/cart/cartSlice";
 const CartProductCard = ({ item }) => {
   const dispatch = useDispatch();
 
-  const handleQtyChange = (id, value) => {
-    dispatch(updateQty({ id, value }));
+  const handleQtyChange = (id, size, value) => {
+    dispatch(updateQty({ id, size, value }));
   };
 
-  const deleteCart = (id) => {
-    dispatch(deleteCartItem(id));
+  const deleteCart = (id, size) => {
+    dispatch(deleteCartItem({ id, size }));
   };
 
   return (
@@ -29,7 +29,7 @@ const CartProductCard = ({ item }) => {
               <FontAwesomeIcon
                 icon={faTrash}
                 width={24}
-                onClick={() => deleteCart(item._id)}
+                onClick={() => deleteCart(item.productId._id, item.size)}
               />
             </button>
           </div>
@@ -43,7 +43,11 @@ const CartProductCard = ({ item }) => {
             Quantity:
             <Form.Select
               onChange={(event) =>
-                handleQtyChange(item._id, event.target.value)
+                handleQtyChange(
+                  item.productId._id,
+                  item.size,
+                  event.target.value
+                )
               }
               required
               defaultValue={item.qty}

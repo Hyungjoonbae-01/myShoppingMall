@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import "./style/login.style.css";
 import { loginWithEmail, loginWithGoogle } from "../../features/user/userSlice";
 import { clearErrors } from "../../features/user/userSlice";
+import { getCartList } from "../../features/cart/cartSlice";
 const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 const Login = () => {
@@ -32,6 +33,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
+      dispatch(getCartList());
       navigate("/");
     }
   }, [user]);
