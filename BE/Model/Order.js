@@ -7,15 +7,15 @@ const orderSchema = new Schema(
   {
     status: { type: String, default: "preparing" },
     totalPrice: { type: Number, requried: true, default: 0 },
-    shipTo: { type: String, required: true },
-    contact: { type: Number, required: true },
+    shipTo: { type: Object, required: true },
+    contact: { type: Object, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User" },
     items: [
       {
         productId: { type: Schema.Types.ObjectId, ref: "Product" },
-        qty: { type: Number, required: true },
+        qty: { type: Number, required: true, default: 1 },
         size: { type: String, required: true },
-        price: { type: String, required: true },
+        price: { type: Number, required: true },
       },
     ],
   },

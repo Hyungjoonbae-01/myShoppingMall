@@ -141,7 +141,6 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = "";
         state.cartList = action.payload.data;
-        state.cartItemCount = action.payload.qty;
         state.totalPrice = action.payload.data.reduce(
           (total, item) => total + item.productId.price * item.qty,
           0
