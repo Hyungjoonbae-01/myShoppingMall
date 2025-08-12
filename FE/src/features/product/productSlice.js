@@ -45,7 +45,7 @@ export const createProduct = createAsyncThunk(
           status: "success",
         })
       );
-      console.log("query", currentQuery);
+
       await dispatch(getProductList(currentQuery));
       return response.data.data;
     } catch (error) {

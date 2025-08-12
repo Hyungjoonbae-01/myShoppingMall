@@ -37,7 +37,6 @@ const PaymentPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const { firstName, lastName, contact, address, city, zip } = shipInfo;
-    console.log("cart", cartList);
     dispatch(
       createOrder({
         totalPrice,

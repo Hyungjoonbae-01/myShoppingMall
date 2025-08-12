@@ -110,7 +110,6 @@ const userSlice = createSlice({
       })
       .addCase(loginWithEmail.rejected, (state, action) => {
         state.loginError = action.payload;
-        console.log("action.payload", action.payload);
       })
 
       .addCase(loginWithToken.fulfilled, (state, action) => {
