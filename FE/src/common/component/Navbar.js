@@ -35,7 +35,7 @@ const Navbar = ({ user }) => {
     if (user) {
       dispatch(getCartList());
     }
-  }, [user, dispatch]);
+  }, [user, dispatch, cartItemCount]);
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
       if (event.target.value === "") {

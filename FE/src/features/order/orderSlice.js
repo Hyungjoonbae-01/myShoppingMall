@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getCartQty } from "../cart/cartSlice";
 import api from "../../utils/api";
 import { showToastMessage } from "../common/uiSlice";
+import { getCartList } from "../cart/cartSlice";
 
 // Define initial state
 const initialState = {
@@ -19,7 +20,8 @@ export const createOrder = createAsyncThunk(
   async (payload, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/order", payload);
-      if (response !== 200) throw new Error(response.error);
+      if (response.status !== 200) throw new Error(response.error);
+      await dispatch(getCartList());
       return response.data.orderNum;
     } catch (error) {
       dispatch(showToastMessage({ message: error.message, status: "error" }));
@@ -55,7 +57,7 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
-        state.loading = false;
+        state.loading = true;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;

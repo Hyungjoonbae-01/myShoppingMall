@@ -10,6 +10,7 @@ const orderSchema = new Schema(
     shipTo: { type: Object, required: true },
     contact: { type: Object, required: true },
     userId: { type: Schema.Types.ObjectId, ref: "User" },
+    orderNum: { type: String, required: true },
     items: [
       {
         productId: { type: Schema.Types.ObjectId, ref: "Product" },

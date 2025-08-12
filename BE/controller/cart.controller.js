@@ -31,7 +31,11 @@ cartController.addItemToCart = async (req, res) => {
 cartController.getCart = async (req, res) => {
   try {
     const { userId } = req;
-    const cart = await Cart.findOne({ userId }).populate({
+    const userCart = await Cart.findOne({ userId });
+    if (!userCart) {
+      return res.status(200).json({ status: "success", data: [] });
+    }
+    const cart = await userCart.populate({
       path: "items",
       populate: {
         path: "productId",
@@ -120,6 +124,11 @@ cartController.deleteItem = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ status: "fail", message: error.message });
   }
+};
+
+cartController.removeCart = async (req, res) => {
+  try {
+  } catch (error) {}
 };
 
 module.exports = cartController;

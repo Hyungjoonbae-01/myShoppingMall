@@ -37,7 +37,7 @@ const PaymentPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const { firstName, lastName, contact, address, city, zip } = shipInfo;
-
+    console.log("cart", cartList);
     dispatch(
       createOrder({
         totalPrice,
@@ -45,7 +45,7 @@ const PaymentPage = () => {
         contact: { firstName, lastName, contact },
         orderList: cartList.map((item) => {
           return {
-            productId: item.productId,
+            productId: item.productId._id,
             price: item.productId.price,
             qty: item.qty,
             size: item.size,
