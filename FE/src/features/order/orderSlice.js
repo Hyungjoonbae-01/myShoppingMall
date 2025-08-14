@@ -19,7 +19,7 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (payload, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.post("/order", payload);
+      const response = await api.post("/Order", payload);
       if (response.status !== 200) throw new Error(response.error);
       await dispatch(getCartList());
       return response.data.orderNum;
@@ -34,7 +34,7 @@ export const getOrder = createAsyncThunk(
   "order/getOrder",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/order/user");
+      const response = await api.get("/Order/user");
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -49,7 +49,7 @@ export const getOrderList = createAsyncThunk(
   "order/getOrderList",
   async (query, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/order", { params: { ...query } });
+      const response = await api.get("/Order", { params: { ...query } });
       if (response.status !== 200) {
         throw new Error(response.error);
       }
