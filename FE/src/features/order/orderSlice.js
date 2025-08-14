@@ -19,7 +19,7 @@ export const createOrder = createAsyncThunk(
   "order/createOrder",
   async (payload, { dispatch, rejectWithValue }) => {
     try {
-      const response = await api.post("/Order", payload);
+      const response = await api.post("/order", payload);
       if (response.status !== 200) throw new Error(response.error);
       await dispatch(getCartList());
       return response.data.orderNum;
@@ -34,7 +34,7 @@ export const getOrder = createAsyncThunk(
   "order/getOrder",
   async (_, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/Order/user");
+      const response = await api.get("/order/user");
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -49,7 +49,7 @@ export const getOrderList = createAsyncThunk(
   "order/getOrderList",
   async (query, { rejectWithValue, dispatch }) => {
     try {
-      const response = await api.get("/Order", { params: { ...query } });
+      const response = await api.get("/order", { params: { ...query } });
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -62,7 +62,22 @@ export const getOrderList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ id, status }, { dispatch, rejectWithValue }) => {}
+  async ({ id, status }, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.put(`/order/${id}`, { status });
+
+      if (response.status !== 200) {
+        throw new Error(response.data?.message || "Failed to update order");
+      }
+
+      // Optionally refresh list
+      await dispatch(getOrderList({ page: 1 }));
+
+      return response.data.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 // Order slice
@@ -110,6 +125,19 @@ const orderSlice = createSlice({
         state.error = "";
       })
       .addCase(getOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = "";
+        const updated = action.payload;
+        const index = state.orderList.findIndex((o) => o._id === updated._id);
+        if (index !== -1) {
+          state.orderList[index] = updated;
+        }
+      })
+      .addCase(updateOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

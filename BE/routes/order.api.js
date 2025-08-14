@@ -11,4 +11,6 @@ router.get(
   orderController.getOrderByUserId
 );
 
+router.put("/:id", authController.authenticate, orderController.updateOrder);
+
 module.exports = router;

@@ -87,4 +87,35 @@ orderController.getOrderByUserId = async (req, res) => {
   }
 };
 
+orderController.updateOrder = async (req, res) => {
+  try {
+    const { id } = req.params; // from /order/:id
+    const { status } = req.body;
+
+    if (!status) {
+      return res
+        .status(400)
+        .json({ status: "fail", message: "Status is required" });
+    }
+
+    const updatedOrder = await Order.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true } // return updated doc
+    )
+      .populate("items.productId", "name")
+      .populate("userId", "email");
+
+    if (!updatedOrder) {
+      return res
+        .status(404)
+        .json({ status: "fail", message: "Order not found" });
+    }
+
+    res.status(200).json({ status: "success", data: updatedOrder });
+  } catch (error) {
+    res.status(400).json({ status: "fail", message: error.message });
+  }
+};
+
 module.exports = orderController;
