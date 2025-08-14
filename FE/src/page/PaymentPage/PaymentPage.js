@@ -32,6 +32,11 @@ const PaymentPage = () => {
 
   useEffect(() => {
     // 오더번호를 받으면 어디로 갈까?
+    if (firstLoading) {
+      setFirstLoading(false);
+    } else if (orderNum !== "") {
+      navigate("/payment/success");
+    }
   }, [orderNum]);
 
   const handleSubmit = (event) => {
@@ -74,9 +79,6 @@ const PaymentPage = () => {
   const handleInputFocus = (e) => {
     setCardValue({ ...cardValue, focus: e.target.name });
   };
-  if (cartList?.length === 0) {
-    navigate("/cart");
-  }
 
   return (
     <Container>

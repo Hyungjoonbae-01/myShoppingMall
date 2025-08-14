@@ -100,12 +100,12 @@ productController.getProductById = async (req, res) => {
     if (!product) throw new Error("failed to get the item.");
     res.status(200).json({ status: "success", data: product });
   } catch (error) {
-    return res.status(400).json({ status: "fail", message: err.message });
+    return res.status(400).json({ status: "fail", message: error.message });
   }
 };
 
-productController.checkStock = async (item) => {
-  const product = await Product.findById(item.productId);
+productController.checkStock = async (item, { session }) => {
+  const product = await Product.findById(item.productId).session(session);
   if (product.stock[item.size] < item.qty) {
     return {
       isVerify: false,
@@ -116,15 +116,15 @@ productController.checkStock = async (item) => {
   newStock[item.size] -= item.qty;
   product.stock = newStock;
 
-  await product.save();
+  await product.save({ session });
   return { isVerify: true };
 };
 
-productController.checkItemListStock = async (itemList) => {
+productController.checkItemListStock = async (itemList, { session }) => {
   const insufficientStockItems = [];
   await Promise.all(
     itemList.map(async (item) => {
-      const stockCheck = await productController.checkStock(item);
+      const stockCheck = await productController.checkStock(item, { session });
       if (!stockCheck.isVerify) {
         insufficientStockItems.push({ item, message: stockCheck.message });
       }
