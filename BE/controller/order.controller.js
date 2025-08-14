@@ -9,7 +9,7 @@ const PAGE_SIZE = 3;
 orderController.createOrder = async (req, res) => {
   const session = await mongoose.startSession();
   try {
-    await session.startTransaction();
+    session.startTransaction();
     // 프론트엔드에서 데이터 보낸거 받아와 userId, totalPrice, shipTo, contact, orderList
     const { userId } = req;
     const { shipTo, contact, totalPrice, orderList } = req.body;
