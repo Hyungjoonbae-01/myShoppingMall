@@ -89,7 +89,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog, currentQuery }) => {
     } else {
       // 상품 수정하기
       dispatch(
-        editProduct({ ...formData, stock: totalStock, id: selectedProduct._id })
+        editProduct({
+          ...formData,
+          stock: totalStock,
+          id: selectedProduct._id,
+          currentQuery: currentQuery,
+        })
       );
     }
   };

@@ -75,7 +75,7 @@ export const deleteProduct = createAsyncThunk(
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+  async ({ id, currentQuery, ...formData }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.put(`/product/${id}`, formData);
       if (response.status !== 200) throw new Error(response.message);
@@ -85,7 +85,7 @@ export const editProduct = createAsyncThunk(
           status: "success",
         })
       );
-      dispatch(getProductList({ page: 1 }));
+      dispatch(getProductList(currentQuery));
       return response.data.data;
     } catch (error) {
       return rejectWithValue(error.message);

@@ -62,7 +62,7 @@ export const getOrderList = createAsyncThunk(
 
 export const updateOrder = createAsyncThunk(
   "order/updateOrder",
-  async ({ id, status }, { dispatch, rejectWithValue }) => {
+  async ({ id, status, currenQuery }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.put(`/order/${id}`, { status });
 
@@ -71,7 +71,7 @@ export const updateOrder = createAsyncThunk(
       }
 
       // Optionally refresh list
-      await dispatch(getOrderList({ page: 1 }));
+      await dispatch(getOrderList(currenQuery));
 
       return response.data.data;
     } catch (error) {
