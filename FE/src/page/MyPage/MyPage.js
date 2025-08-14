@@ -14,7 +14,6 @@ const MyPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (user.level === "admin") {
-      console.log("heyyyyyyyyyyy you hi nevigate admin/order");
       navigate("/admin/order");
     }
     dispatch(getOrder());
