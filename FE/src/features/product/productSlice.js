@@ -8,9 +8,6 @@ export const getProductList = createAsyncThunk(
   async (query, { rejectWithValue }) => {
     try {
       const response = await api.get("/product", { params: { ...query } });
-      if (response.status !== 200) {
-        throw new Error(response.error);
-      }
       return response.data;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -23,8 +20,7 @@ export const getProductDetail = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const res = await api.get(`/product/${id}`);
-      if (res.status !== 200)
-        throw new Error(res.data?.message || "Failed to fetch");
+
       return res.data.data; // a single product object
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || err.message);
@@ -37,7 +33,6 @@ export const createProduct = createAsyncThunk(
   async ({ formData, currentQuery }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.post("/product", formData);
-      if (response.status !== 200) throw new Error(response.error);
       // await dispatch(getProductList());
       dispatch(
         showToastMessage({
@@ -59,7 +54,6 @@ export const deleteProduct = createAsyncThunk(
   async (id, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.delete(`/product/${id}`);
-      if (response.status !== 200) throw new Error(response.nessgae);
       dispatch(
         showToastMessage({
           message: "product successfully deleted",
@@ -78,7 +72,6 @@ export const editProduct = createAsyncThunk(
   async ({ id, currentQuery, ...formData }, { dispatch, rejectWithValue }) => {
     try {
       const response = await api.put(`/product/${id}`, formData);
-      if (response.status !== 200) throw new Error(response.message);
       dispatch(
         showToastMessage({
           message: "product successfully updated",
