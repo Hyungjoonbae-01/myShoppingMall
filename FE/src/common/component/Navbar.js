@@ -49,26 +49,6 @@ const Navbar = ({ user }) => {
   };
   return (
     <div>
-      {showSearchBox && (
-        <div className="display-space-between mobile-search-box w-100">
-          <div className="search display-space-between w-100">
-            <div>
-              <FontAwesomeIcon className="search-icon" icon={faSearch} />
-              <input
-                type="text"
-                placeholder="제품검색"
-                onKeyPress={onCheckEnter}
-              />
-            </div>
-            <button
-              className="closebtn"
-              onClick={() => setShowSearchBox(false)}
-            >
-              &times;
-            </button>
-          </div>
-        </div>
-      )}
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
@@ -81,27 +61,38 @@ const Navbar = ({ user }) => {
         </div>
       </div>
       {user && user.level === "admin" && (
-        <Link to="/admin/product?page=1" className="link-area">
-          Admin page
-        </Link>
+        <div className="link-wrapper">
+          <Link to="/admin/product?page=1" className="link-area">
+            Admin page
+          </Link>
+        </div>
       )}
       <div className="nav-header">
-        <div className="burger-menu hide">
-          <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
+        {/* Left side - Burger menu and Search */}
+        <div className="nav-left">
+          <div className="burger-menu">
+            <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
+          </div>
+          <div className="nav-icon search-box landing-search-box">
+            <FontAwesomeIcon icon={faSearch} />
+            <input
+              type="text"
+              placeholder="제품검색"
+              onKeyPress={onCheckEnter}
+            />
+          </div>
         </div>
 
-        <div>
+        {/* Center - Logo */}
+        <div className="nav-logo">
+          <Link to="/">
+            <img width={100} src="/JJOA.png" alt="hm-logo.png" />
+          </Link>
+        </div>
+
+        {/* Right side - User actions */}
+        <div className="nav-right">
           <div className="display-flex">
-            {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
-              <div className="nav-icon search-box landing-search-box ">
-                <FontAwesomeIcon icon={faSearch} />
-                <input
-                  type="text"
-                  placeholder="제품검색"
-                  onKeyPress={onCheckEnter}
-                />
-              </div>
-            )}
             {user ? (
               <div onClick={handleLogout} className="nav-icon">
                 <svg
@@ -162,11 +153,6 @@ const Navbar = ({ user }) => {
         </div>
       </div>
 
-      <div className="nav-logo">
-        <Link to="/">
-          <img width={200} src="/JJOA.png" alt="hm-logo.png" />
-        </Link>
-      </div>
       <div className="nav-menu-area">
         <ul className="menu">
           {menuList.map((menu, index) => (
