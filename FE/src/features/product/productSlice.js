@@ -7,9 +7,12 @@ export const getProductList = createAsyncThunk(
   "products/getProductList",
   async (query, { rejectWithValue }) => {
     try {
+      console.log("API call with query:", query);
       const response = await api.get("/product", { params: { ...query } });
+      console.log("API response:", response.data);
       return response.data;
     } catch (error) {
+      console.error("API error:", error);
       return rejectWithValue(error.message);
     }
   }
@@ -95,6 +98,7 @@ const productSlice = createSlice({
     loading: false,
     error: "",
     totalPageNum: 1,
+    currentPage: 1,
     success: false,
   },
   reducers: {
@@ -134,6 +138,7 @@ const productSlice = createSlice({
       state.productList = action.payload.data || [];
       state.error = "";
       state.totalPageNum = action.payload.totalPageNum;
+      state.currentPage = action.payload.currentPage;
     });
     builder.addCase(getProductList.rejected, (state, action) => {
       state.loading = false;
