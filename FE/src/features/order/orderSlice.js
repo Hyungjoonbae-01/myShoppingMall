@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getCartQty } from "../cart/cartSlice";
+//import { getCartQty } from "../cart/cartSlice";
 import api from "../../utils/api";
 import { showToastMessage } from "../common/uiSlice";
 import { getCartList } from "../cart/cartSlice";

@@ -5,17 +5,14 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderStatusCard from "./component/OrderStatusCard";
 import "./style/orderStatus.style.css";
 import { getOrder } from "../../features/order/orderSlice";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 const MyPage = () => {
   const dispatch = useDispatch();
   const { orderList } = useSelector((state) => state.order);
-  const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
+  //const { user } = useSelector((state) => state.user);
+  //const navigate = useNavigate();
   useEffect(() => {
-    if (user.level === "admin") {
-      navigate("/admin/order");
-    }
     dispatch(getOrder());
   }, [dispatch]);
 

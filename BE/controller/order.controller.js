@@ -57,7 +57,7 @@ orderController.getOrder = async (req, res) => {
       ? { orderNum: { $regex: ordernum, $options: "i" } }
       : {};
     let query = Order.find(cond)
-      .populate("items.productId", "name")
+      .populate("items.productId", "name image")
       .populate("userId", "email");
     let response = { status: "success" };
     if (page) {
@@ -77,7 +77,10 @@ orderController.getOrder = async (req, res) => {
 orderController.getOrderByUserId = async (req, res) => {
   try {
     const { userId } = req;
-    const orders = await Order.find({ userId }).lean();
+    const orders = await Order.find({ userId })
+      .populate("items.productId", "name image")
+      .populate("userId", "email")
+      .lean();
     if (!orders) {
       throw new Error("Fail to find the orders by user Id.");
     }

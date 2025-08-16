@@ -36,10 +36,12 @@ const AdminOrderPage = () => {
     "Status",
   ];
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     dispatch(getOrderList({ ...searchQuery }));
   }, [query]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (searchQuery.ordernum === "") {
       delete searchQuery.ordernum;
