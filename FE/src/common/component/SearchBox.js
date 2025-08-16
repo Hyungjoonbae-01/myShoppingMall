@@ -9,7 +9,15 @@ const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
 
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
-      setSearchQuery({ ...searchQuery, page: 1, [field]: event.target.value });
+      const currentPage = query.get("page") || 1;
+
+      const currentCategory = query.get("category") || "";
+      setSearchQuery({
+        ...searchQuery,
+        page: currentPage,
+        [field]: event.target.value,
+        category: currentCategory,
+      });
     }
   };
   return (

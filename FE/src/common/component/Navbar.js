@@ -104,7 +104,12 @@ const Navbar = ({ user }) => {
       if (event.target.value === "") {
         return navigate("/");
       }
-      setSearchQuery({ page: 1, name: event.target.value, category: "" });
+      // Keep the current category when searching, so search works within that category
+      setSearchQuery({
+        page: 1,
+        name: event.target.value,
+        category: searchQuery.category, // Keep current category
+      });
     }
   };
   const handleLogout = () => {
@@ -126,6 +131,14 @@ const Navbar = ({ user }) => {
 
   const clearCategoryFilter = () => {
     setSearchQuery({ ...searchQuery, page: 1, category: "" });
+  };
+  const clearSearchTerm = () => {
+    // Clear only the search term, keep the category filter
+    setSearchQuery({
+      page: 1,
+      name: "",
+      category: searchQuery.category,
+    });
   };
   return (
     <div>
@@ -170,6 +183,10 @@ const Navbar = ({ user }) => {
               type="text"
               placeholder="제품검색"
               onKeyPress={onCheckEnter}
+              value={searchQuery.name}
+              onChange={(e) =>
+                setSearchQuery({ ...searchQuery, name: e.target.value })
+              }
             />
           </div>
         </div>
