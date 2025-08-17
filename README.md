@@ -341,10 +341,6 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    - Verify Cloudinary configuration
    - Check image URL format in database
 
-## 👨‍💻 Author
-
-**Hengjun Pei** 🧑‍💻
-
 ## 🙏 Acknowledgments
 
 - 🎨 Bootstrap for responsive UI components
