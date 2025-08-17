@@ -18,7 +18,7 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
 - **🛒 Product Catalog**: Browse products by category with pagination
 - **🔍 Advanced Filtering**: Search by name, filter by category, and gender
 - **🛍️ Shopping Cart**: Add/remove items with real-time updates
-- **🔐 User Authentication**: Login/register with role-based access
+- **🔐 User Authentication**: Login/register with role-based access + Google OAuth
 - **📦 Order Management**: Track order status and history
 - **👨‍💼 Admin Panel**: Product and order management for administrators
 - **⚡ Real-time Updates**: Live cart updates and notifications
@@ -26,7 +26,7 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
 ### ⚙️ Backend Features
 
 - **🌐 RESTful API**: Clean, organized API endpoints
-- **🔒 User Authentication**: JWT-based authentication system
+- **🔒 User Authentication**: JWT-based authentication system + Google OAuth integration
 - **📊 Product Management**: CRUD operations for products
 - **🚚 Order Processing**: Complete order lifecycle management
 - **🛒 Shopping Cart**: Persistent cart functionality
@@ -129,7 +129,7 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    **📦 Core Dependencies:**
 
    ```bash
-   npm install express mongoose cors dotenv bcryptjs jsonwebtoken
+   npm install express mongoose cors dotenv bcryptjs jsonwebtoken google-auth-library
    ```
 
    **🛠️ Development Dependencies:**
@@ -146,6 +146,7 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    - **🔧 dotenv**: Load environment variables from .env file
    - **🔐 bcryptjs**: Password hashing library
    - **🔑 jsonwebtoken**: JWT implementation for authentication
+   - **🔓 google-auth-library**: Google OAuth 2.0 authentication
    - **🔄 nodemon**: Auto-restart server during development
 
 4. **📋 Complete package.json Dependencies**
@@ -160,7 +161,8 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
        "cors": "^2.8.5",
        "dotenv": "^16.3.1",
        "bcryptjs": "^2.4.3",
-       "jsonwebtoken": "^9.0.2"
+       "jsonwebtoken": "^9.0.2",
+       "google-auth-library": "^9.0.0"
      },
      "devDependencies": {
        "nodemon": "^3.0.1"
@@ -173,14 +175,14 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    **Using Yarn:**
 
    ```bash
-   yarn add express mongoose cors dotenv bcryptjs jsonwebtoken
+   yarn add express mongoose cors dotenv bcryptjs jsonwebtoken google-auth-library
    yarn add --dev nodemon
    ```
 
    **Using pnpm:**
 
    ```bash
-   pnpm add express mongoose cors dotenv bcryptjs jsonwebtoken
+   pnpm add express mongoose cors dotenv bcryptjs jsonwebtoken google-auth-library
    pnpm add -D nodemon
    ```
 
@@ -191,6 +193,8 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    MONGODB_URI=mongodb://localhost:27017/JJOA-shopping-mall
    JWT_SECRET=your-secret-key-here
    PORT=5000
+   GOOGLE_CLIENT_ID=your-google-client-id
+   GOOGLE_CLIENT_SECRET=your-google-client-secret
    ```
 
 7. **🚀 Start the server**
@@ -338,8 +342,14 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
    - Check for typos in API endpoint URLs
 
 4. **🖼️ Product Images Not Loading**
+
    - Verify Cloudinary configuration
    - Check image URL format in database
+
+5. **🔓 Google OAuth Issues**
+   - Verify GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are set
+   - Check Google Cloud Console configuration
+   - Ensure redirect URIs are properly configured
 
 ## 🙏 Acknowledgments
 
@@ -347,6 +357,7 @@ A full-stack e-commerce platform built with React (Frontend) and Node.js/Express
 - ✨ FontAwesome for beautiful icons
 - 🍃 MongoDB and Mongoose for database management
 - ⚛️ React community for excellent documentation and tools
+- 🔓 Google for OAuth 2.0 authentication services
 
 ---
 
