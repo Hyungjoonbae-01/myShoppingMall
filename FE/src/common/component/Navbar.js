@@ -8,91 +8,28 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
 import { getCartList } from "../../features/cart/cartSlice";
-import { getProductList } from "../../features/product/productSlice";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
-  const [query] = useSearchParams();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
   const [showSearchBox, setShowSearchBox] = useState(false);
-  const [searchQuery, setSearchQuery] = useState({
-    page: query.get("page") || 1,
-    name: query.get("name") || "", // text search
-    category: query.get("category") || "", // category filter
-  });
   const menuList = [
-    "Top",
-    "Outwear",
-    "Pants",
-    "Accessories",
-    "Shoes",
-    "Beauty",
-    "Bags",
-    "Underwear",
+    "여성",
+    "Divided",
+    "남성",
+    "신생아/유아",
+    "아동",
+    "H&M HOME",
+    "Sale",
+    "지속가능성",
   ];
   let [width, setWidth] = useState(0);
   let navigate = useNavigate();
-
-  useEffect(() => {
-    // Initial load - get all products
-    dispatch(getProductList({ page: 1 }));
-  }, [dispatch]);
-
-  useEffect(() => {
-    // Update searchQuery state when URL changes
-    const currentPage = query.get("page") || 1;
-    const currentName = query.get("name") || "";
-    const currentCategory = query.get("category") || "";
-
-    setSearchQuery({
-      page: currentPage,
-      name: currentName,
-      category: currentCategory,
-    });
-  }, [query]);
-
-  useEffect(() => {
-    // Only dispatch API call when searchQuery changes, not on every query change
-    const hasValidQuery =
-      searchQuery.page || searchQuery.name || searchQuery.category;
-    if (hasValidQuery) {
-      dispatch(getProductList({ ...searchQuery }));
-    }
-  }, [searchQuery, dispatch]);
-
-  useEffect(() => {
-    // Only update URL for filter changes on the homepage, not for navigation to other pages
-    const currentPath = window.location.pathname;
-    const isHomepage = currentPath === "/" || currentPath === "";
-
-    if (!isHomepage) {
-      return; // Don't interfere with navigation to other pages
-    }
-
-    //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
-    if (searchQuery.category === "") {
-      delete searchQuery.category;
-    }
-    if (searchQuery.name === "") {
-      delete searchQuery.name;
-    }
-    if (searchQuery.page === 1) {
-      delete searchQuery.page;
-    }
-
-    const params = new URLSearchParams(searchQuery);
-    const queryString = params.toString();
-    const newUrl = queryString ? `?${queryString}` : "/";
-
-    // Use replace: true for filter changes to avoid creating multiple history entries
-    // This way the back button works properly for actual page navigation
-    navigate(newUrl, { replace: true });
-  }, [searchQuery]);
 
   useEffect(() => {
     if (user) {
@@ -104,103 +41,67 @@ const Navbar = ({ user }) => {
       if (event.target.value === "") {
         return navigate("/");
       }
-      // Keep the current category when searching, so search works within that category
-      setSearchQuery({
-        page: 1,
-        name: event.target.value,
-        category: searchQuery.category, // Keep current category
-      });
+      navigate(`?name=${event.target.value}`);
     }
   };
   const handleLogout = () => {
     dispatch(logout());
   };
-  const handleSearch = (category) => {
-    // Only allow category filtering on the homepage
-    const currentPath = window.location.pathname;
-    const isHomepage = currentPath === "/" || currentPath === "";
-
-    if (!isHomepage) {
-      // If not on homepage, navigate to homepage with the category filter
-      navigate(`/?category=${category}`);
-      return;
-    }
-
-    setSearchQuery({ page: 1, category: category, name: "" });
-  };
-
-  const clearCategoryFilter = () => {
-    setSearchQuery({ ...searchQuery, page: 1, category: "" });
-  };
-  const clearSearchTerm = () => {
-    // Clear only the search term, keep the category filter
-    setSearchQuery({
-      page: 1,
-      name: "",
-      category: searchQuery.category,
-    });
-  };
   return (
     <div>
+      {showSearchBox && (
+        <div className="display-space-between mobile-search-box w-100">
+          <div className="search display-space-between w-100">
+            <div>
+              <FontAwesomeIcon className="search-icon" icon={faSearch} />
+              <input
+                type="text"
+                placeholder="제품검색"
+                onKeyPress={onCheckEnter}
+              />
+            </div>
+            <button
+              className="closebtn"
+              onClick={() => setShowSearchBox(false)}
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
       <div className="side-menu" style={{ width: width }}>
         <button className="closebtn" onClick={() => setWidth(0)}>
           &times;
         </button>
 
         <div className="side-menu-list" id="menu-list">
-          <div className="side-menu-list-title">Gender</div>
-          <button onClick={() => handleSearch("Man")}>Man</button>
-          <button onClick={() => handleSearch("Women")}>Women</button>
-          <button onClick={() => handleSearch("Kids")}>Kids</button>
-          <div className="side-menu-list-title">Category</div>
           {menuList.map((menu, index) => (
-            <button
-              key={index}
-              onClick={() => handleSearch(menu)}
-              className={searchQuery.category === menu ? "active-category" : ""}
-            >
-              {menu}
-            </button>
+            <button key={index}>{menu}</button>
           ))}
         </div>
       </div>
       {user && user.level === "admin" && (
-        <div className="link-wrapper">
-          <Link to="/admin/product?page=1" className="link-area">
-            Admin page
-          </Link>
-        </div>
+        <Link to="/admin/product?page=1" className="link-area">
+          Admin page
+        </Link>
       )}
       <div className="nav-header">
-        {/* Left side - Burger menu and Search */}
-        <div className="nav-left">
-          <div className="burger-menu">
-            <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
-          </div>
-          <div className="nav-icon search-box landing-search-box">
-            <FontAwesomeIcon icon={faSearch} />
-            <input
-              type="text"
-              placeholder="제품검색"
-              onKeyPress={onCheckEnter}
-              value={searchQuery.name}
-              onChange={(e) =>
-                setSearchQuery({ ...searchQuery, name: e.target.value })
-              }
-            />
-          </div>
+        <div className="burger-menu hide">
+          <FontAwesomeIcon icon={faBars} onClick={() => setWidth(250)} />
         </div>
 
-        {/* Center - Logo */}
-        <div className="nav-logo">
-          <Link to="/">
-            <img width={100} src="/JJOA.png" alt="hm-logo.png" />
-          </Link>
-        </div>
-
-        {/* Right side - User actions */}
-        <div className="nav-right">
+        <div>
           <div className="display-flex">
+            {!isMobile && ( // admin페이지에서 같은 search-box스타일을 쓰고있음 그래서 여기서 서치박스 안보이는것 처리를 해줌
+              <div className="nav-icon search-box landing-search-box ">
+                <FontAwesomeIcon icon={faSearch} />
+                <input
+                  type="text"
+                  placeholder="제품검색"
+                  onKeyPress={onCheckEnter}
+                />
+              </div>
+            )}
             {user ? (
               <div onClick={handleLogout} className="nav-icon">
                 <svg
@@ -261,14 +162,15 @@ const Navbar = ({ user }) => {
         </div>
       </div>
 
+      <div className="nav-logo">
+        <Link to="/">
+          <img width={200} src="/JJOA.png" alt="hm-logo.png" />
+        </Link>
+      </div>
       <div className="nav-menu-area">
         <ul className="menu">
           {menuList.map((menu, index) => (
-            <li
-              key={index}
-              onClick={() => handleSearch(menu)}
-              className={searchQuery.category === menu ? "active-category" : ""}
-            >
+            <li key={index}>
               <a href="#">{menu}</a>
             </li>
           ))}

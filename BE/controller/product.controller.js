@@ -1,7 +1,6 @@
 const productController = {};
 const Product = require("../model/Product");
-const PAGE_SIZE = 4;
-const LANDING_PAGE_SIZE = 12;
+const PAGE_SIZE = 5;
 
 productController.createProduct = async (req, res) => {
   try {
@@ -39,54 +38,20 @@ productController.createProduct = async (req, res) => {
 
 productController.getProducts = async (req, res) => {
   try {
-    const { page, name, category } = req.query;
-    let cond = {};
-
-    // Add name filter if provided
-    if (name) {
-      cond.name = { $regex: name, $options: "i" };
-    }
-
-    // Add category filter if provided
-    if (category) {
-      // Convert category to lowercase to match stored data
-      const categoryLower = category.toLowerCase();
-      // Use $in to match any product that has this category in its category array
-      cond.category = { $in: [categoryLower] };
-    }
-
+    const { page, name } = req.query;
+    const cond = name ? { name: { $regex: name, $options: "i" } } : {};
     let query = Product.find(cond);
     let response = { status: "success" };
-
     if (page) {
-      if (category !== "") {
-        query.skip((page - 1) * LANDING_PAGE_SIZE).limit(LANDING_PAGE_SIZE);
-        const totalItemNum = await Product.countDocuments(cond);
-        const totalPageNum = Math.ceil(totalItemNum / LANDING_PAGE_SIZE);
-        response.totalPageNum = totalPageNum;
-        response.currentPage = parseInt(page);
-        response.totalItems = totalItemNum;
-      } else {
-        query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
-        const totalItemNum = await Product.countDocuments(cond);
-        const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
-        response.totalPageNum = totalPageNum;
-        response.currentPage = parseInt(page);
-        response.totalItems = totalItemNum;
-      }
-    } else {
-      // When no page is specified, get all products and set default pagination
+      query.skip((page - 1) * PAGE_SIZE).limit(PAGE_SIZE);
       const totalItemNum = await Product.countDocuments(cond);
-      response.totalPageNum = 1;
-      response.currentPage = 1;
-      response.totalItems = totalItemNum;
+      const totalPageNum = Math.ceil(totalItemNum / PAGE_SIZE);
+      response.totalPageNum = totalPageNum;
     }
-
     const productList = await query.exec();
     response.data = productList;
     res.status(200).json(response);
   } catch (error) {
-    console.error("Error in getProducts:", error);
     res.status(400).json({ status: "fail", message: error.message });
   }
 };
